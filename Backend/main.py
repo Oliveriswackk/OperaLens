@@ -1,17 +1,19 @@
+# main.py — Oliver + Emmanuel
+
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
-from routers import api
-from database.db import init_db
 
-app = FastAPI(title="OperaLens", version="0.1.0")
-
-app.include_router(api.router, prefix="/api")
+from routers.api import router
+from services import history
 
 
-@app.on_event("startup")
-async def startup():
-    init_db()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    history.init_tablas()
+    yield
 
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+app = FastAPI(title="OperaLens API", lifespan=lifespan)
+
+app.include_router(router)
