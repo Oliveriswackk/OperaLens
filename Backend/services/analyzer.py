@@ -34,8 +34,29 @@ def _preparar(df: pd.DataFrame) -> pd.DataFrame:
     df["tipo"] = df["tipo"].str.lower().str.strip()
     return df
 
-def _inventario_valorizado(df):
-    pass
+def _inventario_valorizado(df: pd.DataFrame) -> dict[str, Any]:
+
+    entradas = df[df["tipo"].isin(TIPOS_ENTRADA)].groupby("material")["cantidad"].sum()
+    salidas = df[df["tipo"].isin(TIPOS_SALIDA)].groupby("material")["cantidad"].sum()
+    costo_prom = df.groupby("material")["costo_unitario"].mean()
+
+    materiales = entradas.index.union(salidas.index)
+    stock = (entradas.reindex(materiales, fill_value=0) - salidas.reindex(materiales, fill_value=0))
+    stock = stock.clip(lower=0) 
+
+    valor_por_material = (stock * costo_prom.reindex(materiales, fill_value=0)).round(2)
+    total = float(valor_por_material.sum())
+
+    por_material = {
+        mat: {
+            "cantidad": float(stock[mat]),
+            "costo_unitario_promedio": float(costo_prom.get(mat, 0)),
+            "valor": float(valor_por_material[mat]),
+        }
+        for mat in materiales
+    }
+
+    return {"total": total, "por_material": por_material}
 
 
 def _capital_inmovilizado(df):

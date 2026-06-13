@@ -1,0 +1,4 @@
+fecha,tipo,material,cantidad,costo_unitario,etapa
+2026-06-01,entrada,acero,100,50,almacen
+2026-06-02,salida,acero,20,50,corte
+2026-06-03,desperdicio,acero,5,50,corte
