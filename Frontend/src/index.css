@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+@import './design-system/tokens.css';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --color-primary: #522e93;
+  --color-secondary: #673ab7;
+  --color-brand-gray: #cdcdcd;
+  --color-page: #f5f5f5;
+  --color-ai-banner: #f3eefa;
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+  --color-danger: #ef4444;
+
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+
+  --shadow-soft: 0 4px 24px rgba(82, 46, 147, 0.08);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-page);
+  color: #18181b;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar discreto estilo SaaS premium */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa;
+}
+
+/* Settings: text size */
+html[data-text-size='small'] {
+  font-size: 14px;
+}
+html[data-text-size='medium'] {
+  font-size: 16px;
+}
+html[data-text-size='large'] {
+  font-size: 18px;
+}
+
+/* Settings: interface density */
+html[data-density='compact'] .app-main {
+  padding: 1.25rem;
+}
+html[data-density='comfortable'] .app-main {
+  padding: 2rem;
+}
+html[data-density='spacious'] .app-main {
+  padding: 2.5rem;
+}
+
+/* Settings: dark theme (content area) */
+html.dark {
+  color-scheme: dark;
+}
+html.dark body {
+  background-color: #09090b;
+  color: #fafafa;
+}
+html.dark .bg-page {
+  background-color: #09090b;
+}
+
+/* Settings: high contrast */
+html[data-high-contrast='true'] body {
+  color: #000;
+}
+html[data-high-contrast='true'].dark body {
+  color: #fff;
+}
+
+/* Settings: reduce motion */
+html[data-reduce-motion='true'] *,
+html[data-reduce-motion='true'] *::before,
+html[data-reduce-motion='true'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Settings: focus visibility */
+html[data-focus-visible='true'] :focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

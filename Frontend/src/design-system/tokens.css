@@ -1,0 +1,19 @@
+/* OperaLens — tokens de marca */
+:root {
+  --color-primary: #522e93;
+  --color-secondary: #673ab7;
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --color-gray: #cdcdcd;
+  --color-page-bg: #f5f5f5;        /* fondo main content */
+  --color-ai-banner-bg: #f3eefa;   /* banner resumen IA */
+  --radius-lg: 16px;
+  --radius-xl: 20px;               /* sub-items dentro de cards */
+  --shadow-soft: 0 4px 24px rgba(82, 46, 147, 0.08);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06);
+  /* Semánticos */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+  --color-danger: #ef4444;
+}
