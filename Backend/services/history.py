@@ -49,18 +49,24 @@ def init_tablas() -> None:
 
             CREATE INDEX IF NOT EXISTS idx_mov_material ON movimientos_historicos(material);
             CREATE INDEX IF NOT EXISTS idx_mov_fecha    ON movimientos_historicos(fecha);
-            CREATE INDEX IF NOT EXISTS idx_hash         ON analisis_historico(hash_archivo);
         """)
 
-        # Migración para DBs existentes sin el índice único
+        # Migraciones para DBs existentes
+        try:
+            conn.execute("ALTER TABLE analisis_historico ADD COLUMN hash_archivo TEXT")
+        except sqlite3.OperationalError:
+            pass  # columna ya existe
+
+        # Índice sobre hash_archivo va después del ALTER para que la columna exista
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_hash ON analisis_historico(hash_archivo)")
+
         try:
             conn.execute("""
                 CREATE UNIQUE INDEX IF NOT EXISTS idx_mov_unique
                 ON movimientos_historicos(fecha, tipo, material, cantidad, costo_unitario, etapa)
             """)
         except sqlite3.IntegrityError:
-            # La DB ya tiene duplicados anteriores a esta migración; los nuevos sí se deduplicarán
-            pass
+            pass  # ya hay duplicados previos; los nuevos sí se deduplicarán
 
 
 # ---------------------------------------------------------------------------
