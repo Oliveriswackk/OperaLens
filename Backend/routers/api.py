@@ -1,10 +1,13 @@
 # api.py — Oliver + Emmanuel + Jaime (integración)
 
+import hashlib
+import io
+
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from ai.parser import parse_excel
 from services.normalizer import normalizar
-from services import analyzer, anomalies, history
+from services import analyzer, anomalies, history, production
 from ai import explainer
 
 router = APIRouter()
@@ -12,9 +15,19 @@ router = APIRouter()
 
 @router.post("/upload")
 async def upload_excel(file: UploadFile = File(...)):
+    contenido = await file.read()
+    hash_archivo = hashlib.sha256(contenido).hexdigest()
+
+    # --- Detectar archivo duplicado exacto ---
+    if history.archivo_ya_cargado(hash_archivo):
+        raise HTTPException(
+            status_code=409,
+            detail="Este archivo ya fue cargado anteriormente. Los datos no se duplicaron.",
+        )
+
     # --- Capa 1: parsear y normalizar ---
     try:
-        df = parse_excel(file.file, filename=file.filename)
+        df = parse_excel(io.BytesIO(contenido), filename=file.filename)
         df = normalizar(df)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
@@ -28,13 +41,15 @@ async def upload_excel(file: UploadFile = File(...)):
     # --- Capa 3: explicación en lenguaje natural ---
     explicacion = explainer.explicar(resultado, alertas)
 
-    # --- Persistencia ---
-    analisis_id = history.guardar_analisis(resultado, alertas)
-    history.guardar_movimientos(df)
+    # --- Persistencia con deduplicación ---
+    analisis_id = history.guardar_analisis(resultado, alertas, hash_archivo)
+    nuevos, duplicados = history.guardar_movimientos(df)
 
     return {
         "analisis_id": analisis_id,
         "registros": len(df),
+        "registros_nuevos": nuevos,
+        "registros_duplicados": duplicados,
         "periodo": resultado["periodo"],
         "inventario_valorizado": resultado["inventario_valorizado"],
         "capital_inmovilizado": resultado["capital_inmovilizado"],
@@ -62,3 +77,15 @@ def get_analisis(analisis_id: int):
 @router.get("/tendencia")
 def get_tendencia(ultimos: int = 6):
     return history.tendencia_perdidas(ultimos)
+
+
+@router.get("/produccion/eficiencia")
+def get_eficiencia_produccion(periodo_actual_dias: int = 30):
+    """
+    Compara la composición de costos por etapa entre el periodo actual
+    (últimos N días) y el historial previo.
+    Detecta materiales que suben o bajan su participación en el costo de cada etapa.
+    """
+    analisis = production.analizar_eficiencia_produccion(periodo_actual_dias)
+    explicacion = explainer.explicar_produccion(analisis)
+    return {**analisis, "explicacion": explicacion}
