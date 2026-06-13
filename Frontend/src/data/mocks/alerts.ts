@@ -1,5 +1,4 @@
 import type { Incident } from '@/types'
-import type { Anomalia } from '@/types/analysis'
 
 export const alertStats = {
   activas: 7,
@@ -98,31 +97,5 @@ export const incidents: Incident[] = [
       { hora: 'Ayer 22:10', evento: 'Latencia detectada' },
       { hora: 'Ayer 23:05', evento: 'Resuelto automáticamente' },
     ],
-  },
-]
-
-/** Anomalías con la forma exacta del backend (anomalies.py) */
-export const anomaliasBackend: Anomalia[] = [
-  {
-    tipo: 'consumo_anormal',
-    material: 'acero_inoxidable',
-    valor: 6200,
-    severidad: 'alta',
-    descripcion: 'acero_inoxidable: consumo 52% por encima de lo esperado',
-  },
-  {
-    tipo: 'stock_inmovilizado',
-    material: 'pintura_epoxi',
-    valor: 8000,
-    dias_sin_rotacion: 30,
-    severidad: 'media',
-    descripcion: 'pintura_epoxi: $8,000.00 inmovilizado (30 días sin rotación)',
-  },
-  {
-    tipo: 'perdidas_atipicas',
-    material: 'componentes_ensamblaje',
-    valor: 2000,
-    severidad: 'alta',
-    descripcion: 'componentes_ensamblaje: pérdida atípica detectada (z-score 2.4)',
   },
 ]

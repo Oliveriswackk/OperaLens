@@ -1,17 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
-  AlertTriangle,
-  BarChart3,
   ChevronDown,
+  Clock,
   Home,
   Layers,
-  Lock,
   Menu,
-  Package,
   Settings,
-  ShoppingCart,
   Sparkles,
+  UploadCloud,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SidebarTooltip } from '@/components/shared/SidebarTooltip'
@@ -33,43 +30,8 @@ interface NavGroup {
 
 const navigation: NavGroup[] = [
   { id: 'inicio', label: 'Inicio', icon: Home, to: '/' },
-  {
-    id: 'inventario',
-    label: 'Inventario',
-    icon: Package,
-    children: [{ to: '/inventario', label: 'Inventario Valorizado' }],
-  },
-  {
-    id: 'ventas',
-    label: 'Ventas',
-    icon: ShoppingCart,
-    children: [
-      { to: '/reports', label: 'Reporte de Ventas' },
-      { to: '/analytics', label: 'Gráficas' },
-      { to: '/reports', label: 'Reportes' },
-      { to: '/integrations', label: 'Datos' },
-    ],
-  },
-  { id: 'capital', label: 'Capital Inmovilizado', icon: Lock, to: '/insights' },
-  {
-    id: 'anomalias',
-    label: 'Detección de Anomalías',
-    icon: AlertTriangle,
-    children: [
-      { to: '/alerts', label: 'Alertas' },
-      { to: '/reports', label: 'Reportes' },
-      { to: '/insights', label: 'Patrones de Conducta' },
-    ],
-  },
-  {
-    id: 'analisis',
-    label: 'Análisis',
-    icon: BarChart3,
-    children: [
-      { to: '/operations', label: 'Riesgos Operativos' },
-      { to: '/insights', label: 'Análisis de Pérdidas' },
-    ],
-  },
+  { id: 'cargar', label: 'Cargar Excel', icon: UploadCloud, to: '/cargar' },
+  { id: 'historial', label: 'Historial', icon: Clock, to: '/historial' },
 ]
 
 const settingsNavItem = { id: 'configuracion', label: 'Configuración', icon: Settings, to: '/settings' }
@@ -173,7 +135,7 @@ export function Sidebar() {
             </span>
             <div className="min-w-0">
               <h1 className="truncate text-lg font-extrabold tracking-tight text-white">OperaLens</h1>
-              <p className="truncate text-[10px] text-zinc-500">Inteligencia de Inventario IA</p>
+              <p className="truncate text-[10px] text-zinc-500">Detección de pérdidas operativas</p>
             </div>
           </div>
         )}

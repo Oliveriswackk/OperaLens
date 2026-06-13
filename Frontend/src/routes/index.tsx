@@ -1,13 +1,9 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppShell } from '@/layouts/AppShell'
 import DashboardPage from '@/pages/dashboard'
-import OperationsPage from '@/pages/operations'
-import AnalyticsPage from '@/pages/analytics'
-import AlertsPage from '@/pages/alerts'
-import ReportsPage from '@/pages/reports'
-import InsightsPage from '@/pages/insights'
-import InventoryPage from '@/pages/inventory'
-import IntegrationsPage from '@/pages/integrations'
+import CargarPage from '@/pages/cargar'
+import HistorialPage from '@/pages/historial'
+import HistorialDetallePage from '@/pages/historial/detalle'
 import SettingsPage from '@/pages/settings'
 import { settingsRoutes } from '@/pages/settings/sections'
 
@@ -17,13 +13,9 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <DashboardPage /> },
-      { path: 'operations', element: <OperationsPage /> },
-      { path: 'analytics', element: <AnalyticsPage /> },
-      { path: 'alerts', element: <AlertsPage /> },
-      { path: 'reports', element: <ReportsPage /> },
-      { path: 'insights', element: <InsightsPage /> },
-      { path: 'inventario', element: <InventoryPage /> },
-      { path: 'integrations', element: <IntegrationsPage /> },
+      { path: 'cargar', element: <CargarPage /> },
+      { path: 'historial', element: <HistorialPage /> },
+      { path: 'historial/:id', element: <HistorialDetallePage /> },
       {
         path: 'settings',
         element: <SettingsPage />,
@@ -32,6 +24,14 @@ export const router = createBrowserRouter([
           ...settingsRoutes,
         ],
       },
+      // Rutas mock viejas (tienda/ERP) redirigen al dashboard
+      { path: 'operations', element: <Navigate to="/" replace /> },
+      { path: 'analytics', element: <Navigate to="/" replace /> },
+      { path: 'alerts', element: <Navigate to="/" replace /> },
+      { path: 'reports', element: <Navigate to="/" replace /> },
+      { path: 'insights', element: <Navigate to="/" replace /> },
+      { path: 'inventario', element: <Navigate to="/" replace /> },
+      { path: 'integrations', element: <Navigate to="/cargar" replace /> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
