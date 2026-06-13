@@ -8,9 +8,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-# En Docker usa /app/db.sqlite (montado por Compose).
-# En local usa ./db.sqlite en el directorio de trabajo.
-DB_PATH = Path(os.getenv("DB_PATH", "/app/db.sqlite"))
+# Docker: DB_PATH=/app/db.sqlite via env var
+# Local dev: Backend/db.sqlite (junto a main.py)
+_default_db = Path(__file__).resolve().parent.parent / "db.sqlite"
+DB_PATH = Path(os.getenv("DB_PATH", str(_default_db)))
 
 
 def get_connection() -> sqlite3.Connection:
@@ -21,30 +22,29 @@ def get_connection() -> sqlite3.Connection:
 
 
 def init_tablas() -> None:
-    """Crea las tablas si no existen. Llamar al arrancar la app."""
     with get_connection() as conn:
         conn.executescript("""
             CREATE TABLE IF NOT EXISTS analisis_historico (
-                id              INTEGER PRIMARY KEY AUTOINCREMENT,
-                fecha_carga     TEXT    NOT NULL,
-                periodo_inicio  TEXT,
-                periodo_fin     TEXT,
-                total_perdidas  REAL    DEFAULT 0,
-                capital_inmovilizado REAL DEFAULT 0,
-                inventario_valorizado REAL DEFAULT 0,
-                anomalias_count INTEGER DEFAULT 0,
-                payload         TEXT    -- JSON completo del análisis
+                id                    INTEGER PRIMARY KEY AUTOINCREMENT,
+                fecha_carga           TEXT    NOT NULL,
+                periodo_inicio        TEXT,
+                periodo_fin           TEXT,
+                total_perdidas        REAL    DEFAULT 0,
+                capital_inmovilizado  REAL    DEFAULT 0,
+                inventario_valorizado REAL    DEFAULT 0,
+                anomalias_count       INTEGER DEFAULT 0,
+                payload               TEXT
             );
 
             CREATE TABLE IF NOT EXISTS movimientos_historicos (
-                id              INTEGER PRIMARY KEY AUTOINCREMENT,
-                fecha_carga     TEXT    NOT NULL,
-                fecha           TEXT    NOT NULL,
-                tipo            TEXT    NOT NULL,
-                material        TEXT    NOT NULL,
-                cantidad        REAL    NOT NULL,
-                costo_unitario  REAL    NOT NULL,
-                etapa           TEXT
+                id             INTEGER PRIMARY KEY AUTOINCREMENT,
+                fecha_carga    TEXT NOT NULL,
+                fecha          TEXT NOT NULL,
+                tipo           TEXT NOT NULL,
+                material       TEXT NOT NULL,
+                cantidad       REAL NOT NULL,
+                costo_unitario REAL NOT NULL,
+                etapa          TEXT
             );
 
             CREATE INDEX IF NOT EXISTS idx_mov_material ON movimientos_historicos(material);
@@ -57,10 +57,6 @@ def init_tablas() -> None:
 # ---------------------------------------------------------------------------
 
 def guardar_analisis(analisis: dict[str, Any], anomalias: list[dict]) -> int:
-    """
-    Persiste el resultado de analyzer.analizar() y las anomalías detectadas.
-    Devuelve el id del registro insertado.
-    """
     row = {
         "fecha_carga": datetime.utcnow().isoformat(),
         "periodo_inicio": analisis.get("periodo", {}).get("inicio"),
@@ -88,16 +84,31 @@ def guardar_analisis(analisis: dict[str, Any], anomalias: list[dict]) -> int:
 
 
 def guardar_movimientos(df: pd.DataFrame) -> None:
-    """
-    Persiste el DataFrame normalizado para uso estadístico futuro.
-    Oliver llama esto después de normalizar, o lo llamas tú desde el router.
-    """
-    rows = df[["fecha", "tipo", "material", "cantidad", "costo_unitario", "etapa"]].copy()
-    rows["fecha"] = rows["fecha"].astype(str)
-    rows["fecha_carga"] = datetime.utcnow().isoformat()
+    cols = ["fecha", "tipo", "material", "cantidad", "costo_unitario", "etapa"]
+    fecha_carga = datetime.utcnow().isoformat()
+
+    filas = [
+        (
+            fecha_carga,
+            str(row.fecha),
+            row.tipo,
+            row.material,
+            float(row.cantidad),
+            float(row.costo_unitario),
+            row.etapa,
+        )
+        for row in df[cols].itertuples(index=False)
+    ]
 
     with get_connection() as conn:
-        rows.to_sql("movimientos_historicos", conn, if_exists="append", index=False)
+        conn.executemany(
+            """
+            INSERT INTO movimientos_historicos
+                (fecha_carga, fecha, tipo, material, cantidad, costo_unitario, etapa)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            filas,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -105,7 +116,6 @@ def guardar_movimientos(df: pd.DataFrame) -> None:
 # ---------------------------------------------------------------------------
 
 def obtener_historial(limite: int = 10) -> list[dict]:
-    """Últimos N análisis para el dashboard de tendencias."""
     with get_connection() as conn:
         rows = conn.execute(
             """
@@ -122,7 +132,6 @@ def obtener_historial(limite: int = 10) -> list[dict]:
 
 
 def obtener_analisis_por_id(analisis_id: int) -> dict | None:
-    """Devuelve el payload completo de un análisis guardado."""
     with get_connection() as conn:
         row = conn.execute(
             "SELECT payload FROM analisis_historico WHERE id = ?", (analisis_id,)
@@ -133,10 +142,6 @@ def obtener_analisis_por_id(analisis_id: int) -> dict | None:
 
 
 def obtener_movimientos_historicos(material: str | None = None, ultimos_dias: int = 90) -> pd.DataFrame:
-    """
-    Devuelve movimientos históricos como DataFrame para enriquecer anomalías.
-    Si material=None devuelve todos los materiales.
-    """
     query = """
         SELECT fecha, tipo, material, cantidad, costo_unitario, etapa
         FROM movimientos_historicos
@@ -155,10 +160,6 @@ def obtener_movimientos_historicos(material: str | None = None, ultimos_dias: in
 
 
 def tendencia_perdidas(ultimos_n: int = 6) -> list[dict]:
-    """
-    Serie temporal de pérdidas para el gráfico de tendencia del dashboard.
-    Agrupa por fecha_carga (un punto por carga de Excel).
-    """
     with get_connection() as conn:
         rows = conn.execute(
             """

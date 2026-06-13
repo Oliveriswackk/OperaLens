@@ -3,9 +3,12 @@
 import pandas as pd
 
 
-def parse_excel(file):
+def parse_excel(file, filename: str = "") -> pd.DataFrame:
     """
-    Recibe un archivo Excel y devuelve un DataFrame.
+    Acepta archivos .xlsx, .xls o .csv.
+    Detecta el formato por extensión del nombre original.
     """
-
+    name = (filename or "").lower()
+    if name.endswith(".csv"):
+        return pd.read_csv(file)
     return pd.read_excel(file)

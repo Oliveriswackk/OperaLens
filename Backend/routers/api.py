@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
-from services.parser import parse_excel
+from ai.parser import parse_excel
 from services.normalizer import normalizar
 from services import analyzer, anomalies, history
 from ai import explainer
@@ -14,16 +14,16 @@ router = APIRouter()
 async def upload_excel(file: UploadFile = File(...)):
     # --- Capa 1: parsear y normalizar ---
     try:
-        df = parse_excel(file.file)
+        df = parse_excel(file.file, filename=file.filename)
         df = normalizar(df)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
 
     # --- Capa 2: analizar y detectar anomalías ---
-    resultado = analyzer.analizar(df)
+    resultado = analyzer.analyze(df)
 
     df_historico = history.obtener_movimientos_historicos()
-    alertas = anomalies.detectar(resultado, df_historico)
+    alertas = anomalies.detect_anomalies(resultado, df_historico)
 
     # --- Capa 3: explicación en lenguaje natural ---
     explicacion = explainer.explicar(resultado, alertas)
