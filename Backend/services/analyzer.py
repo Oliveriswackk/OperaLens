@@ -25,8 +25,14 @@ def analyze(df: pd.DataFrame, consumo_esperado: dict[str, float] | None = None) 
         },
     }
 
-def _preparar(df):
-    pass
+def _preparar(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df["fecha"] = pd.to_datetime(df["fecha"])
+    df["cantidad"] = pd.to_numeric(df["cantidad"], errors="coerce").fillna(0)
+    df["costo_unitario"] = pd.to_numeric(df["costo_unitario"], errors="coerce").fillna(0)
+    df["valor"] = df["cantidad"] * df["costo_unitario"]
+    df["tipo"] = df["tipo"].str.lower().str.strip()
+    return df
 
 def _inventario_valorizado(df):
     pass
