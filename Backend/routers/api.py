@@ -42,11 +42,12 @@ async def upload_excel(file: UploadFile = File(...)):
     explicacion = explainer.explicar(resultado, alertas)
 
     # --- Persistencia con deduplicación ---
-    analisis_id = history.guardar_analisis(resultado, alertas, hash_archivo)
     nuevos, duplicados = history.guardar_movimientos(df)
 
-    return {
-        "analisis_id": analisis_id,
+    # Construir respuesta completa antes de persistir para que
+    # GET /historial/{id} devuelva exactamente esto mismo.
+    respuesta = {
+        "analisis_id": None,  # se rellena tras el INSERT
         "registros": len(df),
         "registros_nuevos": nuevos,
         "registros_duplicados": duplicados,
@@ -59,6 +60,10 @@ async def upload_excel(file: UploadFile = File(...)):
         "anomalias": alertas,
         "explicacion": explicacion,
     }
+
+    analisis_id = history.guardar_analisis(resultado, alertas, hash_archivo, respuesta)
+    respuesta["analisis_id"] = analisis_id
+    return respuesta
 
 
 @router.get("/historial")

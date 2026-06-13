@@ -76,7 +76,15 @@ def archivo_ya_cargado(hash_archivo: str) -> bool:
     return row is not None
 
 
-def guardar_analisis(analisis: dict[str, Any], anomalias: list[dict], hash_archivo: str | None = None) -> int:
+def guardar_analisis(
+    analisis: dict[str, Any],
+    anomalias: list[dict],
+    hash_archivo: str | None = None,
+    respuesta_completa: dict | None = None,
+) -> int:
+    # Persiste el response completo de /upload para que GET /historial/{id}
+    # devuelva exactamente lo mismo que devolvió el upload original.
+    payload = respuesta_completa if respuesta_completa is not None else {"analisis": analisis, "anomalias": anomalias}
     row = {
         "fecha_carga": datetime.utcnow().isoformat(),
         "hash_archivo": hash_archivo,
@@ -86,7 +94,7 @@ def guardar_analisis(analisis: dict[str, Any], anomalias: list[dict], hash_archi
         "capital_inmovilizado": analisis.get("capital_inmovilizado", {}).get("total", 0),
         "inventario_valorizado": analisis.get("inventario_valorizado", {}).get("total", 0),
         "anomalias_count": len(anomalias),
-        "payload": json.dumps({"analisis": analisis, "anomalias": anomalias}, ensure_ascii=False),
+        "payload": json.dumps(payload, ensure_ascii=False, default=str),
     }
 
     with get_connection() as conn:

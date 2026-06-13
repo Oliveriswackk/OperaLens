@@ -28,27 +28,41 @@ def detect_anomalies(analisis: dict[str, Any], df_historico: pd.DataFrame | None
 
 def _anomalias_consumo(consumo: dict[str, Any]) -> list[dict[str, Any]]:
     por_material = consumo.get("por_material", {})
-    anomalias = []
+    if not por_material:
+        return []
 
+    # Mediana de desviaciones de todos los materiales del lote.
+    # Actúa como proxy de volumen de producción: si todos subieron ~30%,
+    # es que hubo más producción ese periodo, no un problema específico.
+    desviaciones_lote = [d.get("desviacion_pct", 0) for d in por_material.values()]
+    proxy_volumen = float(np.median(desviaciones_lote))
+
+    anomalias = []
     for mat, datos in por_material.items():
         desv = datos.get("desviacion_pct", 0)
         exceso = datos.get("exceso", 0)
         esperado = datos.get("consumo_esperado", 0)
 
-        if abs(desv) < DESVIACION_CONSUMO_PCT:
+        # Desviación ajustada: lo que no se explica por el volumen general
+        desv_relativa = desv - proxy_volumen
+
+        if abs(desv_relativa) < DESVIACION_CONSUMO_PCT:
             continue
 
-        severidad = _severidad_por_desviacion(abs(desv))
+        severidad = _severidad_por_desviacion(abs(desv_relativa))
         anomalias.append({
-            "tipo": "consumo_excesivo" if desv > 0 else "consumo_bajo",
+            "tipo": "consumo_excesivo" if desv_relativa > 0 else "consumo_bajo",
             "material": mat,
             "valor": round(exceso, 2),
             "umbral": esperado,
             "desviacion_pct": round(desv, 2),
+            "desviacion_relativa_pct": round(desv_relativa, 2),
+            "proxy_volumen_pct": round(proxy_volumen, 2),
             "severidad": severidad,
             "descripcion": (
-                f"{mat}: consumo {'excede' if desv > 0 else 'por debajo de'} lo esperado "
-                f"en {abs(desv):.1f}%"
+                f"{mat}: consumo {'excede' if desv_relativa > 0 else 'por debajo de'} "
+                f"lo esperado en {abs(desv_relativa):.1f}% "
+                f"(ajustado por volumen de producción del periodo)"
             ),
         })
 
