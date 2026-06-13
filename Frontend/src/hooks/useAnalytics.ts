@@ -4,14 +4,20 @@ import {
   lossTrend,
   predictions,
   scenarioPresets,
-  trendHeatmap,
-  whatIfBaseline,
+  salesTrend,
+  topProductsByMonth,
 } from '@/data/mocks/analytics'
 
 export function useAnalytics() {
   return useQuery({
     queryKey: ['analytics'],
     queryFn: () =>
-      mockFetch({ predictions, lossTrend, scenarioPresets, trendHeatmap, whatIfBaseline }),
+      mockFetch({ 
+        predictions, 
+        lossTrend, 
+        scenarioPresets, 
+        salesTrend, 
+        topProductsByMonth 
+      }),
   })
 }
