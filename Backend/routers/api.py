@@ -31,6 +31,8 @@ async def upload_excel(file: UploadFile = File(...)):
         df = normalizar(df)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error al leer el archivo: {e}")
 
     # --- Capa 2: analizar y detectar anomalías ---
     resultado = analyzer.analyze(df)
