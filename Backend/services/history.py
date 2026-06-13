@@ -1,3 +1,5 @@
+#Emmanuel Gonzalez Hernandez
+
 import json
 import os
 import sqlite3
