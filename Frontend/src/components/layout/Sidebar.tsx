@@ -119,6 +119,7 @@ export function Sidebar() {
 
   return (
     <aside
+      data-lupin-target="sidebar"
       className={cn(
         'flex h-screen shrink-0 flex-col overflow-hidden bg-black transition-[width] ease-in-out',
         motion,

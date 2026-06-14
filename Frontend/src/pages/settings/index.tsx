@@ -11,7 +11,10 @@ export default function SettingsPage() {
         description="Personaliza la plataforma, gestiona tu cuenta y preferencias de seguridad"
       />
       <div className="flex flex-col gap-8 lg:flex-row">
-        <nav className="flex shrink-0 gap-1 overflow-x-auto lg:w-56 lg:flex-col lg:overflow-visible">
+        <nav
+          data-lupin-target="settings-nav"
+          className="flex shrink-0 gap-1 overflow-x-auto lg:w-56 lg:flex-col lg:overflow-visible"
+        >
           {settingsNav.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
@@ -31,7 +34,7 @@ export default function SettingsPage() {
           ))}
         </nav>
 
-        <div className="min-w-0 flex-1">
+        <div data-lupin-target="settings-content" className="min-w-0 flex-1">
           <Outlet />
         </div>
       </div>

@@ -24,17 +24,19 @@ export default function HistorialPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl p-2">
-      <PageHeader
-        title="Historial de análisis"
-        description="Análisis previos almacenados en el servidor compartido del equipo."
-        actions={
-          <Link to="/cargar">
-            <Button>
-              <UploadCloud className="h-4 w-4" /> Cargar nuevo
-            </Button>
-          </Link>
-        }
-      />
+      <div data-lupin-target="historial-header">
+        <PageHeader
+          title="Historial de análisis"
+          description="Análisis previos almacenados en el servidor compartido del equipo."
+          actions={
+            <Link to="/cargar">
+              <Button>
+                <UploadCloud className="h-4 w-4" /> Cargar nuevo
+              </Button>
+            </Link>
+          }
+        />
+      </div>
 
       {isLoading && (
         <Card className="flex items-center justify-center gap-2 py-12 text-sm text-zinc-500">
@@ -74,7 +76,7 @@ export default function HistorialPage() {
       )}
 
       {data && data.length > 0 && (
-        <Card className="overflow-hidden p-0">
+        <Card data-lupin-target="historial-list" className="overflow-hidden p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>

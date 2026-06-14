@@ -64,13 +64,15 @@ export default function InsightsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Análisis de pérdidas"
-        description="Hallazgos derivados del análisis de movimientos y explicación IA"
-      />
+      <div data-lupin-target="insights-header">
+        <PageHeader
+          title="Análisis de pérdidas"
+          description="Hallazgos derivados del análisis de movimientos y explicación IA"
+        />
+      </div>
 
       {/* Filtros por categoría */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div data-lupin-target="insights-filters" className="flex flex-wrap items-center gap-2">
         {categorias.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -89,7 +91,7 @@ export default function InsightsPage() {
       </div>
 
       {/* Feed de insights */}
-      <div className="space-y-4">
+      <div data-lupin-target="insights-list" className="space-y-4">
         {filtered.map((insight) => {
           const isOpen = expanded === insight.id
           return (

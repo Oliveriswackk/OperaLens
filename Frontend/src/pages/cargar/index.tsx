@@ -51,6 +51,7 @@ export default function CargarPage() {
 
       <Card className="flex flex-col gap-6">
         <label
+          data-lupin-target="upload-zone"
           onDragOver={(e) => {
             e.preventDefault()
             setDragOver(true)
@@ -126,7 +127,7 @@ export default function CargarPage() {
           </div>
         )}
 
-        <div className="rounded-xl bg-zinc-50 px-4 py-3">
+        <div data-lupin-target="upload-columns" className="rounded-xl bg-zinc-50 px-4 py-3">
           <p className="text-xs font-semibold text-zinc-600">Columnas esperadas en el archivo</p>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {COLUMNAS_ESPERADAS.map((col) => (

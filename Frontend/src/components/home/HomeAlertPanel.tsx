@@ -16,7 +16,10 @@ interface HomeAlertPanelProps {
 
 export function HomeAlertPanel({ alerts }: HomeAlertPanelProps) {
   return (
-    <div className="flex h-full w-full min-h-0 flex-col rounded-2xl bg-white p-4 shadow-card">
+    <div
+      data-lupin-target="alerts-panel"
+      className="flex h-full w-full min-h-0 flex-col rounded-2xl bg-white p-4 shadow-card"
+    >
       <div className="mb-3 flex shrink-0 items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-50">

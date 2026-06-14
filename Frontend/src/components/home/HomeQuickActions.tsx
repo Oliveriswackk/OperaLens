@@ -56,7 +56,7 @@ export function HomeQuickActions() {
   const navigate = useNavigate()
 
   return (
-    <div className="shrink-0">
+    <div className="shrink-0" data-lupin-target="quick-actions">
       <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
         {actions.map(({ id, title, description, icon: Icon, to, accent }) => (
           <button

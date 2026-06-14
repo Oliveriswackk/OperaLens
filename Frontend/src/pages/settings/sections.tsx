@@ -25,6 +25,7 @@ import {
 } from '@/components/settings/SettingsControls'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { useUiStore } from '@/stores/uiStore'
+import { useLupinStore } from '@/stores/lupinStore'
 import { useUserStore } from '@/stores/userStore'
 
 function AppearanceSection() {
@@ -157,6 +158,7 @@ function UserExperienceSection() {
     set,
   } = useSettingsStore()
   const setSidebarCollapsed = useUiStore((s) => s.setSidebarCollapsed)
+  const resetLupinProgress = useLupinStore((s) => s.resetAllProgress)
 
   return (
     <SettingsCard title="Experiencia de usuario" subtitle="Preferencias de navegación e interacción">
@@ -177,7 +179,7 @@ function UserExperienceSection() {
       />
       <ToggleRow
         label="Mostrar tips de onboarding"
-        description="Sugerencias contextuales para nuevos usuarios"
+        description="Lupin inicia automáticamente la guía de exploración en tu primera visita"
         checked={showOnboardingTips}
         onChange={(v) => set('showOnboardingTips', v)}
       />
@@ -187,6 +189,17 @@ function UserExperienceSection() {
         checked={rememberNavigationState}
         onChange={(v) => set('rememberNavigationState', v)}
       />
+      <div className="flex items-center justify-between gap-4 border-t border-zinc-100 pt-4 dark:border-zinc-800">
+        <div>
+          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Reiniciar guía de Lupin</p>
+          <p className="text-xs text-zinc-500">
+            Borra el progreso de tours completados y omitidos para volver a ver todas las guías
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={resetLupinProgress}>
+          Reiniciar
+        </Button>
+      </div>
     </SettingsCard>
   )
 }

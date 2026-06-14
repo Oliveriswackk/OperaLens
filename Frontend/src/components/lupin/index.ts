@@ -1,0 +1,6 @@
+export { LupinButton } from '@/components/lupin/LupinButton'
+export { GuidedTour } from '@/components/lupin/GuidedTour'
+export { SpotlightOverlay } from '@/components/lupin/SpotlightOverlay'
+export { HelpCard } from '@/components/lupin/HelpCard'
+export { resolveTarget, measureTarget } from '@/components/lupin/TourStep'
+export type { TourStepConfig } from '@/lib/lupin/tours'

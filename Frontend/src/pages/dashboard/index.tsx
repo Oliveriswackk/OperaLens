@@ -75,12 +75,14 @@ function DashboardPage() {
           icon="inventario"
           hint={`${formatNumber(analysis.registros)} registros`}
         />
-        <LossKpiCard
-          label="Capital Inmovilizado"
-          value={formatCurrency(analysis.capital_inmovilizado.total)}
-          icon="capital"
-          hint={`${analysis.capital_inmovilizado.materiales.length} materiales sin rotación`}
-        />
+        <div data-lupin-target="kpi-capital">
+          <LossKpiCard
+            label="Capital Inmovilizado"
+            value={formatCurrency(analysis.capital_inmovilizado.total)}
+            icon="capital"
+            hint={`${analysis.capital_inmovilizado.materiales.length} materiales sin rotación`}
+          />
+        </div>
         <LossKpiCard
           label="Anomalías Detectadas"
           value={formatNumber(analysis.anomalias.length)}

@@ -30,7 +30,10 @@ export function HomeSalesChart({ data, topProducts }: HomeSalesChartProps) {
   }))
 
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-2xl bg-white p-4 shadow-card">
+    <div
+      data-lupin-target="sales-chart"
+      className="flex h-full min-h-0 flex-col rounded-2xl bg-white p-4 shadow-card"
+    >
       <div className="mb-2 flex shrink-0 items-start justify-between gap-2">
         <div>
           <h3 className="text-xs font-bold tracking-wide text-zinc-900 uppercase">

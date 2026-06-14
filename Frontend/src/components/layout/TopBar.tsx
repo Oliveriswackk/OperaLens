@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bell, HelpCircle, Menu } from 'lucide-react'
+import { Bell, Menu } from 'lucide-react'
 import { Avatar } from '@/components/ui/avatar'
 import { useUiStore } from '@/stores/uiStore'
 import { useUserStore } from '@/stores/userStore'
@@ -7,7 +7,7 @@ import { recentNotifications } from '@/data/mocks/dashboard'
 import { AlertSeverityBadge } from '@/components/shared/AlertSeverityBadge'
 
 export function TopBar() {
-  const { setMobileSidebarOpen, setSupportOpen } = useUiStore()
+  const { setMobileSidebarOpen } = useUiStore()
   const { nombre, rol, iniciales } = useUserStore()
   const [notifOpen, setNotifOpen] = useState(false)
 
@@ -24,16 +24,6 @@ export function TopBar() {
       </button>
 
       <div className="ml-auto flex items-center gap-1.5">
-        {/* Ayuda */}
-        <button
-          type="button"
-          onClick={() => setSupportOpen(true)}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600"
-          aria-label="Ayuda"
-        >
-          <HelpCircle className="h-5 w-5" />
-        </button>
-
         {/* Notificaciones */}
         <div className="relative">
           <button

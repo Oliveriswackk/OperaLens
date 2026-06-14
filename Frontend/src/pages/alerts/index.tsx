@@ -61,13 +61,15 @@ export default function AlertsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Anomalías detectadas"
-        description="Riesgos y desviaciones en movimientos de materiales procesados por OperaLens"
-      />
+      <div data-lupin-target="alerts-header">
+        <PageHeader
+          title="Anomalías detectadas"
+          description="Riesgos y desviaciones en movimientos de materiales procesados por OperaLens"
+        />
+      </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 gap-6 xl:grid-cols-4">
+      <div data-lupin-target="alerts-stats" className="grid grid-cols-2 gap-6 xl:grid-cols-4">
         {stats.map(({ label, value, icon: Icon, color }) => (
           <Card key={label} className="flex items-center gap-4">
             <span className={cn('flex h-11 w-11 items-center justify-center rounded-full', color)}>
@@ -101,7 +103,7 @@ export default function AlertsPage() {
 
       <div className="flex gap-6">
         {/* Tabla de incidentes */}
-        <Card className={cn('flex-1 p-0 transition-all', selected && 'hidden 2xl:block')}>
+        <Card data-lupin-target="alerts-table" className={cn('flex-1 p-0 transition-all', selected && 'hidden 2xl:block')}>
           {filtered.length === 0 ? (
             <div className="p-6">
               <EmptyState

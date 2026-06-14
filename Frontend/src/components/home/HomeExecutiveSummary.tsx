@@ -7,7 +7,10 @@ interface HomeExecutiveSummaryProps {
 
 export function HomeExecutiveSummary({ summary }: HomeExecutiveSummaryProps) {
   return (
-    <div className="relative flex shrink-0 items-center gap-4 overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-r from-[#f3eefa] via-white to-white px-5 py-4 shadow-soft">
+    <div
+      data-lupin-target="ai-summary"
+      className="relative flex shrink-0 items-center gap-4 overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-r from-[#f3eefa] via-white to-white px-5 py-4 shadow-soft"
+    >
       <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-primary/5 blur-2xl" />
       <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary shadow-sm">
         <Sparkles className="h-5 w-5 text-white" />

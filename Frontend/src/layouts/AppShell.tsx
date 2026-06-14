@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/layout/Sidebar'
 import { SupportFooter } from '@/components/layout/SupportFooter'
 import { SupportModal } from '@/components/layout/SupportModal'
 import { TopBar } from '@/components/layout/TopBar'
+import { LupinButton, GuidedTour } from '@/components/lupin'
 import { useUiStore } from '@/stores/uiStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 
@@ -60,6 +61,8 @@ export function AppShell() {
         <SupportFooter />
       </div>
       <SupportModal />
+      <LupinButton />
+      <GuidedTour />
     </div>
   )
 }

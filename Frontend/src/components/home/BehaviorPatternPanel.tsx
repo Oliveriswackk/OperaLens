@@ -44,7 +44,10 @@ interface BehaviorPatternPanelProps {
 export function BehaviorPatternPanel({ insights, patternCount }: BehaviorPatternPanelProps) {
   const count = patternCount ?? insights.length
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-2xl bg-white p-4 shadow-card">
+    <div
+      data-lupin-target="behavior-patterns"
+      className="flex h-full min-h-0 flex-col rounded-2xl bg-white p-4 shadow-card"
+    >
       <div className="mb-3 flex shrink-0 items-center gap-2">
         <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-secondary/10">
           <Brain className="h-4 w-4 text-secondary" />
