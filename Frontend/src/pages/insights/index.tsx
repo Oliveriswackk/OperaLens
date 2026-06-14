@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { PageLoader } from '@/components/shared/PageLoader'
 import { ConfidenceIndicator } from '@/components/widgets/ConfidenceIndicator'
+import { NoAnalysisState } from '@/components/shared/NoAnalysisState'
 import { useInsights } from '@/hooks/useInsights'
 import { cn } from '@/lib/utils'
 import type { Insight } from '@/types'
@@ -36,7 +37,7 @@ const prioridadVariant: Record<Insight['prioridad'], 'danger' | 'warning' | 'inf
 }
 
 export default function InsightsPage() {
-  const { data: insights, isLoading } = useInsights()
+  const { data: insights, isLoading, hasData } = useInsights()
   const [categoria, setCategoria] = useState<Insight['categoria'] | 'todas'>('todas')
   const [expanded, setExpanded] = useState<string | null>(null)
 
@@ -47,13 +48,25 @@ export default function InsightsPage() {
       : insights.filter((i) => i.categoria === categoria)
   }, [insights, categoria])
 
-  if (isLoading || !insights) return <PageLoader />
+  if (isLoading) return <PageLoader />
+
+  if (!hasData || !insights?.length) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Análisis de pérdidas"
+          description="Hallazgos derivados del análisis de movimientos y explicación IA"
+        />
+        <NoAnalysisState />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Insights IA"
-        description="Recomendaciones estratégicas priorizadas, generadas por el motor de inteligencia operacional"
+        title="Análisis de pérdidas"
+        description="Hallazgos derivados del análisis de movimientos y explicación IA"
       />
 
       {/* Filtros por categoría */}

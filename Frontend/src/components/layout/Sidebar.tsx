@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
+  AlertTriangle,
+  BarChart3,
   ChevronDown,
   Clock,
+  FileText,
   Home,
   Layers,
   Menu,
+  Package,
   Settings,
   Sparkles,
   UploadCloud,
@@ -31,7 +35,12 @@ interface NavGroup {
 const navigation: NavGroup[] = [
   { id: 'inicio', label: 'Inicio', icon: Home, to: '/' },
   { id: 'cargar', label: 'Cargar Excel', icon: UploadCloud, to: '/cargar' },
+  { id: 'inventario', label: 'Inventario', icon: Package, to: '/inventario' },
+  { id: 'anomalias', label: 'Anomalías', icon: AlertTriangle, to: '/alerts' },
+  { id: 'operaciones', label: 'Operaciones', icon: Layers, to: '/operations' },
+  { id: 'analisis', label: 'Análisis', icon: BarChart3, to: '/insights' },
   { id: 'historial', label: 'Historial', icon: Clock, to: '/historial' },
+  { id: 'reportes', label: 'Reportes', icon: FileText, to: '/reports' },
 ]
 
 const settingsNavItem = { id: 'configuracion', label: 'Configuración', icon: Settings, to: '/settings' }

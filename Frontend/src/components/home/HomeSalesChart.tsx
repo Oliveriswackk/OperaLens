@@ -34,16 +34,16 @@ export function HomeSalesChart({ data, topProducts }: HomeSalesChartProps) {
       <div className="mb-2 flex shrink-0 items-start justify-between gap-2">
         <div>
           <h3 className="text-xs font-bold tracking-wide text-zinc-900 uppercase">
-            Tendencia de Ventas
+            Tendencia de Pérdidas
           </h3>
-          <p className="text-[11px] text-zinc-500">Comparación histórica y proyección IA</p>
+          <p className="text-[11px] text-zinc-500">Historial de análisis y proyección IA</p>
         </div>
         <div className="flex items-center gap-3 text-[10px] font-medium text-zinc-400">
           <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-primary" /> Actual
+            <span className="h-2 w-2 rounded-full bg-primary" /> Pérdidas
           </span>
           <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-brand-gray" /> Histórico
+            <span className="h-2 w-2 rounded-full bg-brand-gray" /> Anterior
           </span>
           <span className="flex items-center gap-1">
             <span className="h-2 w-2 rounded-full border border-dashed border-secondary" /> IA

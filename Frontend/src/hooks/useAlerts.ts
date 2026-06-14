@@ -1,10 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
-import { mockFetch } from '@/lib/api/client'
-import { alertStats, incidents } from '@/data/mocks/alerts'
+import { useMemo } from 'react'
+import { mapAnomaliasToAlerts } from '@/lib/api/adapters'
+import { useActiveAnalysis } from '@/hooks/useActiveAnalysis'
 
 export function useAlerts() {
-  return useQuery({
-    queryKey: ['alerts'],
-    queryFn: () => mockFetch({ stats: alertStats, incidents }),
-  })
+  const { analysis, isLoading, refetch, hasData } = useActiveAnalysis()
+
+  const data = useMemo(() => {
+    if (!analysis) return undefined
+    return mapAnomaliasToAlerts(analysis)
+  }, [analysis])
+
+  return { data, isLoading, refetch, hasData }
 }

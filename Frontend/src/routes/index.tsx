@@ -4,6 +4,11 @@ import DashboardPage from '@/pages/dashboard'
 import CargarPage from '@/pages/cargar'
 import HistorialPage from '@/pages/historial'
 import HistorialDetallePage from '@/pages/historial/detalle'
+import InventoryPage from '@/pages/inventory'
+import AlertsPage from '@/pages/alerts'
+import OperationsPage from '@/pages/operations'
+import InsightsPage from '@/pages/insights'
+import ReportsPage from '@/pages/reports'
 import SettingsPage from '@/pages/settings'
 import { settingsRoutes } from '@/pages/settings/sections'
 
@@ -14,8 +19,13 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'cargar', element: <CargarPage /> },
+      { path: 'inventario', element: <InventoryPage /> },
+      { path: 'alerts', element: <AlertsPage /> },
+      { path: 'operations', element: <OperationsPage /> },
+      { path: 'insights', element: <InsightsPage /> },
       { path: 'historial', element: <HistorialPage /> },
       { path: 'historial/:id', element: <HistorialDetallePage /> },
+      { path: 'reports', element: <ReportsPage /> },
       {
         path: 'settings',
         element: <SettingsPage />,
@@ -24,14 +34,9 @@ export const router = createBrowserRouter([
           ...settingsRoutes,
         ],
       },
-      // Rutas mock viejas (tienda/ERP) redirigen al dashboard
-      { path: 'operations', element: <Navigate to="/" replace /> },
       { path: 'analytics', element: <Navigate to="/" replace /> },
-      { path: 'alerts', element: <Navigate to="/" replace /> },
-      { path: 'reports', element: <Navigate to="/" replace /> },
-      { path: 'insights', element: <Navigate to="/" replace /> },
-      { path: 'inventario', element: <Navigate to="/" replace /> },
       { path: 'integrations', element: <Navigate to="/cargar" replace /> },
+      { path: 'inventario-old', element: <Navigate to="/inventario" replace /> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

@@ -38,9 +38,11 @@ const sentimentConfig = {
 
 interface BehaviorPatternPanelProps {
   insights: BehaviorInsight[]
+  patternCount?: number
 }
 
-export function BehaviorPatternPanel({ insights }: BehaviorPatternPanelProps) {
+export function BehaviorPatternPanel({ insights, patternCount }: BehaviorPatternPanelProps) {
+  const count = patternCount ?? insights.length
   return (
     <div className="flex h-full min-h-0 flex-col rounded-2xl bg-white p-4 shadow-card">
       <div className="mb-3 flex shrink-0 items-center gap-2">
@@ -82,8 +84,8 @@ export function BehaviorPatternPanel({ insights }: BehaviorPatternPanelProps) {
       <div className="mt-2 flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/5 px-3 py-2">
         <Package className="h-3.5 w-3.5 text-primary" />
         <p className="text-[10px] text-zinc-600">
-          <span className="font-semibold text-primary">IA:</span> 6 patrones analizados en los
-          últimos 30 días
+          <span className="font-semibold text-primary">IA:</span> {count} patrón
+          {count === 1 ? '' : 'es'} analizado{count === 1 ? '' : 's'} en el periodo
         </p>
       </div>
     </div>

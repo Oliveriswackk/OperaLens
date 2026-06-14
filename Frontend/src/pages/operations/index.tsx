@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import { PageLoader } from '@/components/shared/PageLoader'
 import { SeverityBadge } from '@/components/widgets/SeverityBadge'
 import { SimpleBarChart } from '@/components/charts/SimpleBarChart'
+import { NoAnalysisState } from '@/components/shared/NoAnalysisState'
 import { useOperations } from '@/hooks/useOperations'
 import { cn } from '@/lib/utils'
 import type { ProcessItem } from '@/types'
@@ -20,24 +21,42 @@ const estadoProceso: Record<ProcessItem['estado'], { label: string; variant: 'su
 }
 
 const tabs = [
-  { id: 'procesos', label: 'Procesos' },
+  { id: 'procesos', label: 'Por Etapa' },
   { id: 'recursos', label: 'Recursos' },
-  { id: 'areas', label: 'Por Área' },
+  { id: 'areas', label: 'Rendimiento' },
 ]
 
 export default function OperationsPage() {
-  const { data, isLoading } = useOperations()
+  const { data, isLoading, hasData } = useOperations()
   const [tab, setTab] = useState('procesos')
 
-  if (isLoading || !data) return <PageLoader />
+  if (isLoading) return <PageLoader />
+
+  if (!hasData || !data) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Operaciones de planta"
+          description="Pérdidas y consumo por etapa de producción"
+        />
+        <NoAnalysisState />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Centro de Operaciones"
-        description="Monitoreo en tiempo real de procesos, flujos de trabajo y recursos"
+        title="Operaciones de planta"
+        description="Pérdidas, consumo y eficiencia por etapa de producción"
         actions={<Tabs tabs={tabs} value={tab} onChange={setTab} />}
       />
+
+      {data.eficienciaError && (
+        <p className="rounded-xl bg-amber-50 px-4 py-2 text-sm text-amber-800">
+          Eficiencia: {data.eficienciaError}
+        </p>
+      )}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         {/* Panel principal */}
@@ -45,8 +64,8 @@ export default function OperationsPage() {
           {tab === 'procesos' && (
             <Card>
               <CardHeader
-                title="Estado de Procesos"
-                subtitle="Flujos de trabajo activos y su progreso actual"
+                title="Pérdidas y consumo por etapa"
+                subtitle="Basado en el análisis activo de movimientos"
               />
               <div className="space-y-5">
                 {data.processes.map((proceso) => (
@@ -82,14 +101,14 @@ export default function OperationsPage() {
           {tab === 'recursos' && (
             <Card>
               <CardHeader
-                title="Utilización de Recursos"
-                subtitle="Capacidad instalada vs uso actual por equipo"
+                title="Capital inmovilizado"
+                subtitle="Materiales con baja rotación detectados en el análisis"
               />
               <Table>
                 <THead>
                   <Tr>
-                    <Th>Recurso</Th>
-                    <Th>Capacidad</Th>
+                    <Th>Material</Th>
+                    <Th>Valor inmovilizado</Th>
                     <Th className="w-1/3">Utilización</Th>
                   </Tr>
                 </THead>
@@ -125,8 +144,8 @@ export default function OperationsPage() {
           {tab === 'areas' && (
             <Card>
               <CardHeader
-                title="Rendimiento por Área"
-                subtitle="Índice de desempeño operativo por departamento"
+              title="Índice por etapa"
+              subtitle="Comparativo de pérdidas entre etapas de producción"
               />
               <SimpleBarChart
                 data={data.areaPerformance}
@@ -142,8 +161,8 @@ export default function OperationsPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader
-              title="Cuellos de Botella"
-              subtitle="Detectados automáticamente por IA"
+              title="Desviaciones detectadas"
+              subtitle="Cambios de participación de costos o anomalías relevantes"
             />
             <div className="space-y-3">
               {data.bottlenecks.map((b) => (
@@ -162,7 +181,7 @@ export default function OperationsPage() {
           </Card>
 
           <Card>
-            <CardHeader title="Tareas Críticas" subtitle="Pendientes con vencimiento próximo" />
+            <CardHeader title="Anomalías prioritarias" subtitle="Del análisis activo" />
             <ul className="space-y-4">
               {data.criticalTasks.map((t) => (
                 <li key={t.id} className="flex items-start gap-3">

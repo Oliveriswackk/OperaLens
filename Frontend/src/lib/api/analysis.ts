@@ -3,6 +3,7 @@
  * Consumen los endpoints del backend FastAPI tal cual (sin reestructurar el contrato).
  */
 import type { AnalisisCompleto, AnalisisResumen } from '@/types/analysis'
+import type { EficienciaProduccion } from '@/types/production'
 import { apiFetch, apiUpload } from './client'
 
 /** POST /upload — sube un Excel/CSV de movimientos y devuelve el análisis completo. */
@@ -25,4 +26,11 @@ export function getAnalisis(id: number): Promise<AnalisisCompleto> {
 /** GET /tendencia — serie cronológica de pérdidas (más antiguo primero). */
 export function getTendencia(ultimos = 6): Promise<AnalisisResumen[]> {
   return apiFetch<AnalisisResumen[]>(`/tendencia?ultimos=${ultimos}`)
+}
+
+/** GET /produccion/eficiencia — cambios de participación de costos por etapa. */
+export function getEficienciaProduccion(periodoDias = 30): Promise<EficienciaProduccion> {
+  return apiFetch<EficienciaProduccion>(
+    `/produccion/eficiencia?periodo_actual_dias=${periodoDias}`,
+  )
 }

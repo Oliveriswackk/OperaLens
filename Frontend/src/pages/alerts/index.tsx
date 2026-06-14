@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import { PageLoader } from '@/components/shared/PageLoader'
 import { EmptyState } from '@/components/shared/EmptyState'
 import { SeverityBadge } from '@/components/widgets/SeverityBadge'
+import { NoAnalysisState } from '@/components/shared/NoAnalysisState'
 import { useAlerts } from '@/hooks/useAlerts'
 import { cn } from '@/lib/utils'
 import type { Incident, Severidad } from '@/types'
@@ -26,7 +27,7 @@ const severityFilters: { id: Severidad | 'todas'; label: string }[] = [
 ]
 
 export default function AlertsPage() {
-  const { data, isLoading } = useAlerts()
+  const { data, isLoading, hasData } = useAlerts()
   const [severity, setSeverity] = useState<Severidad | 'todas'>('todas')
   const [selected, setSelected] = useState<Incident | null>(null)
 
@@ -37,20 +38,32 @@ export default function AlertsPage() {
       : data.incidents.filter((i) => i.severidad === severity)
   }, [data, severity])
 
-  if (isLoading || !data) return <PageLoader />
+  if (isLoading) return <PageLoader />
+
+  if (!hasData || !data) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Anomalías detectadas"
+          description="Riesgos y desviaciones en movimientos de materiales procesados por OperaLens"
+        />
+        <NoAnalysisState />
+      </div>
+    )
+  }
 
   const stats = [
-    { label: 'Alertas Activas', value: data.stats.activas, icon: Siren, color: 'text-red-500 bg-red-100' },
-    { label: 'Incidentes Críticos', value: data.stats.criticas, icon: ShieldAlert, color: 'text-amber-600 bg-amber-100' },
-    { label: 'Resueltos (30d)', value: data.stats.resueltas, icon: CheckCircle2, color: 'text-emerald-600 bg-emerald-100' },
-    { label: 'Tiempo Medio de Respuesta', value: data.stats.mttr, icon: Clock, color: 'text-primary bg-primary/10' },
+    { label: 'Total anomalías', value: data.stats.activas, icon: Siren, color: 'text-red-500 bg-red-100' },
+    { label: 'Severidad alta', value: data.stats.altas, icon: ShieldAlert, color: 'text-amber-600 bg-amber-100' },
+    { label: 'Severidad media', value: data.stats.medias, icon: Clock, color: 'text-primary bg-primary/10' },
+    { label: 'Severidad baja', value: data.stats.bajas, icon: CheckCircle2, color: 'text-emerald-600 bg-emerald-100' },
   ]
 
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Alertas y Gestión de Incidentes"
-        description="Monitoreo de riesgos con detección automática de anomalías por IA"
+        title="Anomalías detectadas"
+        description="Riesgos y desviaciones en movimientos de materiales procesados por OperaLens"
       />
 
       {/* KPIs */}
@@ -101,8 +114,8 @@ export default function AlertsPage() {
               <THead>
                 <Tr>
                   <Th>ID</Th>
-                  <Th>Incidente</Th>
-                  <Th>Área</Th>
+                  <Th>Anomalía</Th>
+                  <Th>Material</Th>
                   <Th>Severidad</Th>
                   <Th>Estado</Th>
                   <Th>Detección</Th>

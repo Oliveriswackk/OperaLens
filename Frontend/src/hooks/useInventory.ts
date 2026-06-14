@@ -1,15 +1,22 @@
-import { useQuery } from '@tanstack/react-query'
-import { mockFetch } from '@/lib/api/client'
-import { inventoryProducts } from '@/data/mocks/inventory'
+import { useMemo } from 'react'
+import { mapInventario } from '@/lib/api/adapters'
+import { useActiveAnalysis } from '@/hooks/useActiveAnalysis'
 import type { InventoryListResponse } from '@/types/inventory'
 
 export function useInventory() {
-  return useQuery({
-    queryKey: ['inventory'],
-    queryFn: () =>
-      mockFetch<InventoryListResponse>({
-        products: inventoryProducts,
-        total: inventoryProducts.length,
-      }),
-  })
+  const { analysis, isLoading, refetch, hasData } = useActiveAnalysis()
+
+  const data = useMemo<InventoryListResponse | undefined>(() => {
+    if (!analysis) return undefined
+    const products = mapInventario(analysis)
+    return { products, total: products.length }
+  }, [analysis])
+
+  return {
+    data,
+    isLoading,
+    isFetching: isLoading,
+    refetch,
+    hasData,
+  }
 }

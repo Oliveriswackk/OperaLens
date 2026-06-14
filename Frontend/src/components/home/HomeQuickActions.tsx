@@ -23,7 +23,7 @@ const actions: QuickAction[] = [
     title: 'Subir Archivo',
     description: 'Importar nuevo inventario o reporte.',
     icon: Upload,
-    to: '/integrations',
+    to: '/cargar',
     accent: 'from-primary/10 to-primary/5 group-hover:from-primary/15',
   },
   {
@@ -47,7 +47,7 @@ const actions: QuickAction[] = [
     title: 'Análisis de Rendimiento',
     description: 'Revisar tendencias, comportamiento y desempeño general.',
     icon: BarChart3,
-    to: '/analytics',
+    to: '/insights',
     accent: 'from-emerald-50 to-emerald-50/50 group-hover:from-emerald-100/80',
   },
 ]

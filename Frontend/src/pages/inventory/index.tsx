@@ -5,6 +5,7 @@ import { InventoryPageHeader } from '@/components/inventory/InventoryPageHeader'
 import { InventoryToolbar } from '@/components/inventory/InventoryToolbar'
 import { InventoryTable } from '@/components/inventory/InventoryTable'
 import { Skeleton } from '@/components/ui/skeleton'
+import { NoAnalysisState } from '@/components/shared/NoAnalysisState'
 import { useInventory } from '@/hooks/useInventory'
 import {
   applyInventoryFilters,
@@ -24,7 +25,7 @@ function InventoryPageLoader() {
 
 export default function InventoryPage() {
   const navigate = useNavigate()
-  const { data, isLoading, refetch, isFetching } = useInventory()
+  const { data, isLoading, refetch, isFetching, hasData } = useInventory()
   const [filters, setFilters] = useState<InventoryFilters>(defaultInventoryFilters)
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -39,9 +40,17 @@ export default function InventoryPage() {
   const externalSortActive =
     filters.priceSort !== 'none' || filters.purchaseSort !== 'none'
 
-  const handleUpload = () => navigate('/integrations')
+  const handleUpload = () => navigate('/cargar')
 
   if (isLoading) return <InventoryPageLoader />
+
+  if (!hasData) {
+    return (
+      <div className="flex h-full min-h-0 flex-col">
+        <NoAnalysisState title="No existen productos cargados actualmente." />
+      </div>
+    )
+  }
 
   return (
     <div className="flex h-full min-h-0 flex-col">
