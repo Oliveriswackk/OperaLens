@@ -123,7 +123,13 @@ def normalizar(df: pd.DataFrame) -> pd.DataFrame:
             faltantes = [c for c in COLUMNAS if c not in df.columns]
 
     if faltantes:
-        raise ValueError(f"Columnas faltantes: {', '.join(faltantes)}")
+        columnas_en_archivo = list(df.columns)
+        raise ValueError(
+            f"No se pudieron identificar las siguientes columnas requeridas: "
+            f"{', '.join(faltantes)}. "
+            f"El archivo contiene: {', '.join(columnas_en_archivo)}. "
+            f"Renombra o agrega las columnas faltantes e intenta de nuevo."
+        )
 
     # --------------------------------------------------
     # Seleccionar únicamente columnas necesarias
