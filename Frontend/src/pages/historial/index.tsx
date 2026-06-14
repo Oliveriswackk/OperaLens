@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AlertTriangle, Clock, Loader2, UploadCloud } from 'lucide-react'
+import { AlertTriangle, Clock, Loader2, Trash2, UploadCloud } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { useHistorial } from '@/hooks/useHistorial'
+import { useDeleteAnalisis } from '@/hooks/useDeleteAnalisis'
 import { ApiError } from '@/lib/api/client'
 import { formatCurrency, formatNumber } from '@/lib/utils'
 
@@ -21,6 +23,14 @@ function formatRangoPeriodo(inicio?: string, fin?: string) {
 
 export default function HistorialPage() {
   const { data, isLoading, isError, error } = useHistorial(20)
+  const deleteMutation = useDeleteAnalisis()
+  const [confirmId, setConfirmId] = useState<number | null>(null)
+
+  function handleDelete(id: number) {
+    deleteMutation.mutate(id, {
+      onSuccess: () => setConfirmId(null),
+    })
+  }
 
   return (
     <div className="mx-auto w-full max-w-5xl p-2">
@@ -108,14 +118,47 @@ export default function HistorialPage() {
                     <td className="px-4 py-3 text-right text-zinc-700">
                       {formatNumber(row.anomalias_count)}
                     </td>
-                    <td className="px-4 py-3 text-right">
-                      {row.id != null && (
-                        <Link to={`/historial/${row.id}`}>
-                          <Button size="sm" variant="outline">
-                            Ver detalle
-                          </Button>
-                        </Link>
-                      )}
+                    <td className="px-4 py-3">
+                      <div className="flex items-center justify-end gap-2">
+                        {row.id != null && (
+                          <Link to={`/historial/${row.id}`}>
+                            <Button size="sm" variant="outline">
+                              Ver detalle
+                            </Button>
+                          </Link>
+                        )}
+                        {row.id != null && (
+                          confirmId === row.id ? (
+                            <div className="flex items-center gap-1">
+                              <Button
+                                size="sm"
+                                variant="danger"
+                                onClick={() => handleDelete(row.id!)}
+                                disabled={deleteMutation.isPending}
+                              >
+                                {deleteMutation.isPending
+                                  ? <Loader2 className="h-3 w-3 animate-spin" />
+                                  : '¿Borrar?'}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setConfirmId(null)}
+                              >
+                                Cancelar
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setConfirmId(row.id!)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          )
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

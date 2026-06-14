@@ -155,6 +155,24 @@ def guardar_movimientos(df: pd.DataFrame) -> tuple[int, int]:
 
 
 # ---------------------------------------------------------------------------
+# Borrado
+# ---------------------------------------------------------------------------
+
+def eliminar_analisis(analisis_id: int) -> bool:
+    """
+    Elimina el registro de analisis_historico.
+    Los movimientos_historicos NO se borran — están deduplicados y son
+    compartidos entre cargas; eliminarlos rompería el baseline histórico.
+    Devuelve True si existía y fue eliminado, False si no se encontró.
+    """
+    with get_connection() as conn:
+        cur = conn.execute(
+            "DELETE FROM analisis_historico WHERE id = ?", (analisis_id,)
+        )
+        return cur.rowcount > 0
+
+
+# ---------------------------------------------------------------------------
 # Lectura
 # ---------------------------------------------------------------------------
 

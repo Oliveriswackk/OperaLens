@@ -34,3 +34,8 @@ export function getEficienciaProduccion(periodoDias = 30): Promise<EficienciaPro
     `/produccion/eficiencia?periodo_actual_dias=${periodoDias}`,
   )
 }
+
+/** DELETE /historial/{id} — elimina el registro de análisis (los movimientos históricos se conservan). */
+export function deleteAnalisis(id: number): Promise<{ eliminado: boolean; id: number }> {
+  return apiFetch(`/historial/${id}`, { method: 'DELETE' })
+}

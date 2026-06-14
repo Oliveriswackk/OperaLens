@@ -81,6 +81,14 @@ def get_analisis(analisis_id: int):
     return data
 
 
+@router.delete("/historial/{analisis_id}")
+def delete_analisis(analisis_id: int):
+    eliminado = history.eliminar_analisis(analisis_id)
+    if not eliminado:
+        raise HTTPException(status_code=404, detail="Análisis no encontrado")
+    return {"eliminado": True, "id": analisis_id}
+
+
 @router.get("/tendencia")
 def get_tendencia(ultimos: int = 6):
     return history.tendencia_perdidas(ultimos)
