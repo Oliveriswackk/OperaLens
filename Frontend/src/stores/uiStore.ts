@@ -6,11 +6,13 @@ const SIDEBAR_STORAGE_KEY = 'operalens-sidebar-collapsed'
 interface UiState {
   commandPaletteOpen: boolean
   copilotOpen: boolean
+  supportOpen: boolean
   sidebarCollapsed: boolean
   mobileSidebarOpen: boolean
   navExpandedGroups: Record<string, boolean>
   setCommandPaletteOpen: (open: boolean) => void
   setCopilotOpen: (open: boolean) => void
+  setSupportOpen: (open: boolean) => void
   toggleSidebarCollapsed: () => void
   setSidebarCollapsed: (collapsed: boolean) => void
   setMobileSidebarOpen: (open: boolean) => void
@@ -40,11 +42,13 @@ function loadSidebarCollapsed(): boolean {
 export const useUiStore = create<UiState>((set, get) => ({
   commandPaletteOpen: false,
   copilotOpen: false,
+  supportOpen: false,
   sidebarCollapsed: loadSidebarCollapsed(),
   mobileSidebarOpen: false,
   navExpandedGroups: loadNavExpanded(),
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
   setCopilotOpen: (open) => set({ copilotOpen: open }),
+  setSupportOpen: (open) => set({ supportOpen: open }),
   toggleSidebarCollapsed: () => {
     const next = !get().sidebarCollapsed
     localStorage.setItem(SIDEBAR_STORAGE_KEY, String(next))

@@ -7,7 +7,7 @@ import { recentNotifications } from '@/data/mocks/dashboard'
 import { AlertSeverityBadge } from '@/components/shared/AlertSeverityBadge'
 
 export function TopBar() {
-  const { setMobileSidebarOpen } = useUiStore()
+  const { setMobileSidebarOpen, setSupportOpen } = useUiStore()
   const { nombre, rol, iniciales } = useUserStore()
   const [notifOpen, setNotifOpen] = useState(false)
 
@@ -27,6 +27,7 @@ export function TopBar() {
         {/* Ayuda */}
         <button
           type="button"
+          onClick={() => setSupportOpen(true)}
           className="flex h-10 w-10 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600"
           aria-label="Ayuda"
         >

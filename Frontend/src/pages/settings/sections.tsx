@@ -411,11 +411,13 @@ function SecuritySection() {
 }
 
 function AboutSection() {
+  const setSupportOpen = useUiStore((s) => s.setSupportOpen)
+
   const links = [
     { label: 'Notas de la versión', href: '#', icon: Sparkles },
     { label: 'Documentación', href: '#', icon: BookOpen },
-    { label: 'Centro de soporte', href: '#', icon: ExternalLink },
-  ]
+    { label: 'Centro de soporte', href: '#', icon: ExternalLink, opensSupport: true },
+  ] as const
 
   return (
     <div className="space-y-6">
@@ -434,19 +436,39 @@ function AboutSection() {
 
       <SettingsCard title="Recursos" subtitle="Documentación, soporte y actualizaciones">
         <div className="divide-y divide-zinc-50 dark:divide-zinc-800">
-          {links.map(({ label, href, icon: Icon }) => (
-            <a
-              key={label}
-              href={href}
-              className="flex items-center justify-between gap-4 py-4 transition-colors hover:text-primary"
-            >
-              <div className="flex items-center gap-3">
-                <Icon className="h-4 w-4 text-zinc-400" />
-                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{label}</span>
-              </div>
-              <ExternalLink className="h-4 w-4 text-zinc-400" />
-            </a>
-          ))}
+          {links.map(({ label, href, icon: Icon, ...rest }) => {
+            const opensSupport = 'opensSupport' in rest && rest.opensSupport
+            const className =
+              'flex w-full items-center justify-between gap-4 py-4 transition-colors hover:text-primary'
+            const content = (
+              <>
+                <div className="flex items-center gap-3">
+                  <Icon className="h-4 w-4 text-zinc-400" />
+                  <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    {label}
+                  </span>
+                </div>
+                <ExternalLink className="h-4 w-4 text-zinc-400" />
+              </>
+            )
+            if (opensSupport) {
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => setSupportOpen(true)}
+                  className={className}
+                >
+                  {content}
+                </button>
+              )
+            }
+            return (
+              <a key={label} href={href} className={className}>
+                {content}
+              </a>
+            )
+          })}
         </div>
       </SettingsCard>
 

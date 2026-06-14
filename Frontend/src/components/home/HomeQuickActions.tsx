@@ -28,8 +28,8 @@ const actions: QuickAction[] = [
   },
   {
     id: 'historial',
-    title: 'Ver Historial',
-    description: 'Consultar análisis previos y detalle.',
+    title: 'Ver Reportes',
+    description: 'Consultar reportes históricos y exportables.',
     icon: Clock,
     to: '/historial',
     accent: 'from-secondary/10 to-secondary/5 group-hover:from-secondary/15',
@@ -57,9 +57,6 @@ export function HomeQuickActions() {
 
   return (
     <div className="shrink-0">
-      <h3 className="mb-2 text-xs font-bold tracking-wide text-zinc-900 uppercase">
-        Acciones Rápidas
-      </h3>
       <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
         {actions.map(({ id, title, description, icon: Icon, to, accent }) => (
           <button

@@ -2,6 +2,8 @@ import { useSettingsEffects } from '@/hooks/useSettingsEffects'
 import { Outlet, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { Sidebar } from '@/components/layout/Sidebar'
+import { SupportFooter } from '@/components/layout/SupportFooter'
+import { SupportModal } from '@/components/layout/SupportModal'
 import { TopBar } from '@/components/layout/TopBar'
 import { useUiStore } from '@/stores/uiStore'
 import { useSettingsStore } from '@/stores/settingsStore'
@@ -55,7 +57,9 @@ export function AppShell() {
             <Outlet />
           </div>
         </main>
+        <SupportFooter />
       </div>
+      <SupportModal />
     </div>
   )
 }

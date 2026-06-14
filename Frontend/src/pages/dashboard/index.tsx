@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Upload } from 'lucide-react'
 import { BehaviorPatternPanel } from '@/components/home/BehaviorPatternPanel'
@@ -5,10 +6,21 @@ import { HomeAlertPanel } from '@/components/home/HomeAlertPanel'
 import { HomeExecutiveSummary } from '@/components/home/HomeExecutiveSummary'
 import { HomeQuickActions } from '@/components/home/HomeQuickActions'
 import { HomeSalesChart } from '@/components/home/HomeSalesChart'
+import { LossKpiCard } from '@/components/home/LossKpiCard'
 import { useDashboardData } from '@/hooks/useDashboardData'
+import { formatCurrency, formatNumber } from '@/lib/utils'
 
 function DashboardPage() {
-  const { data, loading, error } = useDashboardData()
+  const { data, analysis, loading, error } = useDashboardData()
+
+  const altaCount = analysis?.anomalias.filter((a) => a.severidad === 'alta').length ?? 0
+
+  const periodoHint = useMemo(() => {
+    if (!analysis?.periodo) return undefined
+    const inicio = analysis.periodo.inicio.slice(0, 10)
+    const fin = analysis.periodo.fin.slice(0, 10)
+    return `${inicio} → ${fin}`
+  }, [analysis])
 
   if (loading) {
     return (
@@ -29,7 +41,7 @@ function DashboardPage() {
     )
   }
 
-  if (!data) {
+  if (!data || !analysis) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10">
@@ -54,12 +66,34 @@ function DashboardPage() {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-2 overflow-hidden">
-      <div className="shrink-0">
-        <h1 className="text-lg font-bold tracking-tight text-zinc-900">Inicio</h1>
-        <p className="text-[11px] text-zinc-500">Resumen ejecutivo de operaciones</p>
-      </div>
+      <HomeQuickActions />
 
-      <HomeExecutiveSummary summary={data.summary} />
+      <div className="grid shrink-0 grid-cols-2 gap-2 lg:grid-cols-4">
+        <LossKpiCard
+          label="Productos Analizados"
+          value={formatNumber(Object.keys(analysis.inventario_valorizado.por_material).length)}
+          icon="inventario"
+          hint={`${formatNumber(analysis.registros)} registros`}
+        />
+        <LossKpiCard
+          label="Capital Inmovilizado"
+          value={formatCurrency(analysis.capital_inmovilizado.total)}
+          icon="capital"
+          hint={`${analysis.capital_inmovilizado.materiales.length} materiales sin rotación`}
+        />
+        <LossKpiCard
+          label="Anomalías Detectadas"
+          value={formatNumber(analysis.anomalias.length)}
+          icon="anomalias"
+          hint={`${altaCount} de severidad alta`}
+        />
+        <LossKpiCard
+          label="Pérdidas Estimadas"
+          value={formatCurrency(analysis.perdidas_operativas.total)}
+          icon="perdidas"
+          hint={periodoHint}
+        />
+      </div>
 
       <div className="grid min-h-0 flex-1 grid-cols-12 gap-2 overflow-hidden">
         <div className="col-span-12 min-h-0 lg:col-span-5">
@@ -76,7 +110,7 @@ function DashboardPage() {
         </div>
       </div>
 
-      <HomeQuickActions />
+      <HomeExecutiveSummary summary={data.summary} />
     </div>
   )
 }

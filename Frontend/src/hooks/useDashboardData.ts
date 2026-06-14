@@ -14,6 +14,7 @@ export function useDashboardData() {
 
   return {
     data,
+    analysis,
     loading: isLoading || tendenciaLoading,
     error: isError ? 'No se pudo cargar el análisis' : null,
   }
