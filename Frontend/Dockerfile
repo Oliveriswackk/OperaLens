@@ -1,11 +1,6 @@
 FROM node:22-alpine AS builder
 
 WORKDIR /app
-
-# En producción (nginx en :3000) las peticiones van a /api/* y el proxy evita CORS.
-ARG VITE_API_URL=/api
-ENV VITE_API_URL=$VITE_API_URL
-
 COPY package*.json ./
 RUN npm ci
 COPY . .

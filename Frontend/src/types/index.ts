@@ -70,29 +70,6 @@ export interface Insight {
   pasos: string[]
 }
 
-export interface ProcessItem {
-  id: string
-  nombre: string
-  area: string
-  estado: 'activo' | 'pausado' | 'critico'
-  progreso: number
-  responsable: string
-}
-
-export interface ResourceUtilization {
-  id: string
-  recurso: string
-  utilizacion: number
-  capacidad: string
-}
-
-export interface Bottleneck {
-  id: string
-  proceso: string
-  impacto: string
-  severidad: Severidad
-}
-
 export interface Prediction {
   id: string
   nombre: string

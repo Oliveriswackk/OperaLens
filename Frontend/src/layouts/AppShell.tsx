@@ -10,7 +10,7 @@ export function AppShell() {
   useSettingsEffects()
   const { mobileSidebarOpen, setMobileSidebarOpen } = useUiStore()
   const { pathname } = useLocation()
-  const isFullHeight = pathname === '/' || pathname.startsWith('/inventario')
+  const isFullHeight = pathname === '/'
   const reduceMotion = useSettingsStore((s) => s.reduceAnimations)
   const motionClass = reduceMotion ? 'duration-0' : 'duration-300'
 

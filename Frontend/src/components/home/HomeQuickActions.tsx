@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import {
   BarChart3,
-  FileText,
+  Clock,
   ShieldAlert,
   Upload,
   type LucideIcon,
@@ -21,17 +21,17 @@ const actions: QuickAction[] = [
   {
     id: 'upload',
     title: 'Subir Archivo',
-    description: 'Importar nuevo inventario o reporte.',
+    description: 'Importar nuevo archivo Excel de movimientos.',
     icon: Upload,
     to: '/cargar',
     accent: 'from-primary/10 to-primary/5 group-hover:from-primary/15',
   },
   {
-    id: 'reports',
-    title: 'Ver Reportes',
-    description: 'Consultar reportes históricos y exportables.',
-    icon: FileText,
-    to: '/reports',
+    id: 'historial',
+    title: 'Ver Historial',
+    description: 'Consultar análisis previos y detalle.',
+    icon: Clock,
+    to: '/historial',
     accent: 'from-secondary/10 to-secondary/5 group-hover:from-secondary/15',
   },
   {
@@ -39,7 +39,7 @@ const actions: QuickAction[] = [
     title: 'Análisis de Riesgos',
     description: 'Explorar riesgos operativos detectados por IA.',
     icon: ShieldAlert,
-    to: '/operations',
+    to: '/alerts',
     accent: 'from-amber-50 to-amber-50/50 group-hover:from-amber-100/80',
   },
   {

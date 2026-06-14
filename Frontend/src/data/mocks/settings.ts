@@ -10,8 +10,8 @@ export const orgUsers: OrgUser[] = [
 
 export const roles = [
   { id: 'admin', nombre: 'Administrador', usuarios: 1, permisos: ['Todo el sistema'] },
-  { id: 'manager', nombre: 'Gerente', usuarios: 2, permisos: ['Dashboard', 'Operaciones', 'Alertas', 'Reportes', 'Insights IA'] },
-  { id: 'analyst', nombre: 'Analista', usuarios: 2, permisos: ['Dashboard', 'Analítica', 'Reportes'] },
+  { id: 'manager', nombre: 'Gerente', usuarios: 2, permisos: ['Dashboard', 'Alertas', 'Historial', 'Insights IA'] },
+  { id: 'analyst', nombre: 'Analista', usuarios: 2, permisos: ['Dashboard', 'Análisis', 'Historial'] },
   { id: 'viewer', nombre: 'Visor', usuarios: 0, permisos: ['Dashboard (solo lectura)'] },
 ]
 

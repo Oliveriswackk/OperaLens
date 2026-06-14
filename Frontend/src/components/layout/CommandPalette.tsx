@@ -1,24 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Activity,
   Bell,
-  FileText,
+  Clock,
   LayoutDashboard,
   LineChart,
   Plug,
   Search,
   Settings,
   Sparkles,
+  UploadCloud,
 } from 'lucide-react'
 import { useUiStore } from '@/stores/uiStore'
 
 const commands = [
   { to: '/', label: 'Ir a Inicio', icon: LayoutDashboard, keywords: 'dashboard inicio kpi' },
-  { to: '/operations', label: 'Ir a Operaciones', icon: Activity, keywords: 'procesos flujos recursos equipos' },
+  { to: '/cargar', label: 'Ir a Cargar Excel', icon: UploadCloud, keywords: 'upload excel archivo' },
+  { to: '/historial', label: 'Ir a Historial', icon: Clock, keywords: 'análisis previos historial' },
   { to: '/analytics', label: 'Ir a Analítica', icon: LineChart, keywords: 'predicciones what if escenarios' },
   { to: '/alerts', label: 'Ir a Alertas', icon: Bell, keywords: 'incidentes severidad anomalías' },
-  { to: '/reports', label: 'Ir a Reportes', icon: FileText, keywords: 'exportar programados ejecutivos' },
   { to: '/insights', label: 'Ir a Insights IA', icon: Sparkles, keywords: 'recomendaciones oportunidades' },
   { to: '/integrations', label: 'Ir a Integraciones', icon: Plug, keywords: 'api conectores sincronización' },
   { to: '/settings', label: 'Ir a Configuración', icon: Settings, keywords: 'usuarios roles seguridad' },
